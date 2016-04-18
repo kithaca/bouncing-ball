@@ -14,6 +14,7 @@ var Ball = function (svg, x, radius, xBound, yBound) {
 	this.yDir = 0;
 	this.velocity = 3;
 	this.circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+	this.circle.style.cursor = "pointer";
 	this.configureEventListeners();
 	this.draw();
 };
@@ -68,7 +69,9 @@ Ball.prototype.configureEventListeners = function () {
 
 Ball.prototype.mouseDown = function (e) {
 	e.preventDefault();
+
 	this.clicked = true;
+	this.svg.style.cursor = "pointer";
 };
 
 Ball.prototype.mouseUp = function (e) {
@@ -83,6 +86,7 @@ Ball.prototype.mouseUp = function (e) {
 		this.xDir = xDiff / hyp;
 		this.yDir = yDiff / hyp;
 		this.clicked = false;
+		this.svg.style.cursor = "auto";
 	}
 };
 
