@@ -1,18 +1,47 @@
 var Ball = require("./ball")
 
-var svg = document.getElementById("svg");
-var width = window.innerWidth;
-var height = window.innerHeight;
+var SVG = function () {
+	this.svg = document.getElementById("svg");
+	this.width = window.innerWidth;
+	this.height = window.innerHeight;
 
-// svg.setAttribute("x", 10);
-// svg.setAttribute("y", 10);
-svg.setAttribute("height", height * 0.9);
-svg.setAttribute("width", width * 0.9);
+	this.setDimensions(this.width, this.height);
+	window.addEventListener("resize", this.onResize.bind(this));
 
-var ballRadius = width * 0.05;
+	this.ball = this.addBall();
+	this.start();
+};
 
-var ball = new Ball(svg, width/2, ballRadius+10, ballRadius, width*0.9, height*0.9);
+SVG.prototype.addBall = function () {
+	var ballRadius = this.width * 0.05;
+	return new Ball(this.svg, this.width/2, ballRadius+10, ballRadius, this.width*0.9, this.height*0.9);
+};
 
-setInterval(function () {
-	ball.move();
-}, 5);
+SVG.prototype.setDimensions = function (width, height) {
+	svg.setAttribute("width", width * 0.9);
+	svg.setAttribute("height", height * 0.9);
+};
+
+SVG.prototype.onResize = function (e) {
+	e.preventDefault();
+	this.width = window.innerWidth;
+	this.height = window.innerHeight;
+	this.setDimensions(this.width, this.height);
+	this.ball.resetBounds(this.width*0.9, this.height*0.9);
+};
+
+SVG.prototype.start = function () {
+	this.lastTime = 0;
+	requestAnimationFrame(this.animate.bind(this));
+};
+
+SVG.prototype.animate = function (timestamp) {
+	var delta = timestamp - this.lastTime;
+	this.ball.move();
+	requestAnimationFrame(this.animate.bind(this));
+};
+
+var bouncingBall = new SVG();
+
+
+
