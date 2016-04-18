@@ -1,11 +1,11 @@
-var Ball = function (svg, x, y, radius, xBound, yBound) {
+var Ball = function (svg, x, radius, xBound, yBound) {
 	this.svg = svg;
 	this.xBound = xBound;
 	this.yBound = yBound;
 	this.clicked = false;
 
 	this.x = x;
-	this.y = y;
+	this.y = radius + 30;
 	this.radius = radius;
 	this.outline = "black";
 	this.outlineWidth = "3";
@@ -29,19 +29,31 @@ Ball.prototype.draw = function () {
 	this.svg.appendChild(this.circle);
 };
 
-Ball.prototype.move = function () {
-	if (this.x - this.radius <= 0 || this.x + this.radius >= this.xBound) {
-		this.xDir *= -1;
-	}
-	if (this.y - this.radius <= 0 || this.y + this.radius >= this.yBound) {
-		this.yDir *= -1;
+Ball.prototype.adjustBounds = function () {
+	if (this.x - this.radius <= 0) {
+		this.x = this.radius + 2;
+		this.xDir = this.xDir < 0 ? this.xDir *= -1 : this.xDir;
+	} else if (this.x + this.radius >= this.xBound) {
+		this.x = this.xBound - this.radius - 2;
+		this.xDir = this.xDir > 0 ? this.xDir *= -1 : this.xDir;
 	}
 
+	if (this.y - this.radius <= 0) {
+		this.y = this.radius + 2;
+		this.yDir = this.yDir < 0 ? this.yDir *= -1 : this.yDir;
+	} else if (this.y + this.radius >= this.yBound) {
+		this.y = this.yBound - this.radius - 2;
+		this.yDir = this.yDir > 0 ? this.yDir *= -1 : this.yDir;
+	}
+};
+
+Ball.prototype.move = function () {
+	this.adjustBounds();
 	this.x += this.xDir * this.velocity;
 	this.y += this.yDir * this.velocity;
 
-	this.circle.setAttribute("cx", this.x.toString());
-	this.circle.setAttribute("cy", this.y.toString());
+	this.circle.setAttribute("cx", this.x);
+	this.circle.setAttribute("cy", this.y);
 };
 
 Ball.prototype.resetBounds = function (xBound, yBound) {
@@ -74,5 +86,12 @@ Ball.prototype.mouseUp = function (e) {
 	}
 };
 
+Ball.prototype.resize = function (value) {
+	this.radius = (value * 0.8) + 20;
+	this.adjustBounds();
+	this.circle.setAttribute("r", this.radius);
+	this.circle.setAttribute("cx", this.x);
+	this.circle.setAttribute("cy", this.y);
+};
 
 module.exports = Ball;

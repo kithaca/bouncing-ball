@@ -6,13 +6,19 @@
     <title>Bouncing Ball</title>
   </head>
   <body>
-  	<h1>Bouncing Ball</h1>
+    <header id="header">
+    	<h1 class="title">Bouncing Ball</h1>
 
-  	<h2>Click and drag the ball to set it in motion or to change direction. Adjust ball size using the sliding scale on the lower right.</h2>
+    	<h2 class="instructions">Click and drag the ball to set it in motion or to change direction. Adjust ball size using the sliding scale on the lower right.</h2>
+
+    </header>
 
   	<svg id="svg"></svg>
 
-  	<input type="range" id="ball-slider" value="50">
+    <div id="sliders">
+      <p class="label"><strong>Ball Size</strong></p>
+      <input type="range" id="size-slider">
+    </div>
 
     <script type="text/javascript" src="bundle.js" charset="utf-8"></script>
   </body>
