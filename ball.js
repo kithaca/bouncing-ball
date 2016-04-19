@@ -1,4 +1,4 @@
-var Ball = function (svg, x, radius, xBound, yBound) {
+var Ball = function (svg, x, radius, xBound, yBound, color) {
 	this.svg = svg;
 	this.xBound = xBound;
 	this.yBound = yBound;
@@ -7,27 +7,43 @@ var Ball = function (svg, x, radius, xBound, yBound) {
 	this.x = x;
 	this.y = radius + 30;
 	this.radius = radius;
-	this.outline = "black";
-	this.outlineWidth = "3";
-	this.color = "red";
+	this.color = color;
 	this.xDir = 0;
 	this.yDir = 0;
 	this.velocity = 3;
 	this.circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-	this.circle.style.cursor = "pointer";
 	this.configureEventListeners();
 	this.draw();
 };
 
 Ball.prototype.draw = function () {
+	this.createGradient();
 	this.circle.setAttribute("cx", this.x);
 	this.circle.setAttribute("cy", this.y);
 	this.circle.setAttribute("r", this.radius);
-	this.circle.setAttribute("stroke", this.outline);
-	this.circle.setAttribute("stroke-width", this.outlineWidth);
-	this.circle.setAttribute("fill", this.color);
+	this.circle.setAttribute("fill", "url(#grad)");
+	this.circle.style.cursor = "pointer";
 
 	this.svg.appendChild(this.circle);
+};
+
+Ball.prototype.createGradient = function () {
+	var gradient = document.createElementNS("http://www.w3.org/2000/svg", "radialGradient");
+	var stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+	var stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+
+	gradient.setAttribute("id", "grad");
+	gradient.setAttribute("fx", "30%");
+	gradient.setAttribute("fy", "30%");
+
+	stop1.setAttribute("offset", "10%");
+	stop1.setAttribute("stop-color", "white");
+	stop2.setAttribute("offset", "75%");
+	stop2.setAttribute("stop-color", this.color);
+
+	gradient.appendChild(stop1);
+	gradient.appendChild(stop2);
+	this.svg.appendChild(gradient);
 };
 
 Ball.prototype.adjustBounds = function () {
@@ -55,6 +71,7 @@ Ball.prototype.move = function () {
 
 	this.circle.setAttribute("cx", this.x);
 	this.circle.setAttribute("cy", this.y);
+	// this.circle.setAttribute("transform", "rotate(10)");
 };
 
 Ball.prototype.resetBounds = function (xBound, yBound) {
@@ -96,6 +113,10 @@ Ball.prototype.resize = function (value) {
 	this.circle.setAttribute("r", this.radius);
 	this.circle.setAttribute("cx", this.x);
 	this.circle.setAttribute("cy", this.y);
+};
+
+Ball.prototype.changeVel = function (value) {
+	this.velocity = value * 0.15;
 };
 
 module.exports = Ball;

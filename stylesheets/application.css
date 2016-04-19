@@ -2,10 +2,6 @@ body {
 	font-family: sans-serif;
 }
 
-header {
-
-}
-
 .title {
 	font-size: 30px;
 }
@@ -14,8 +10,13 @@ header {
 	font-size: 15px;
 }
 
+.label {
+	padding-left: 15px;
+	margin: 0 15px;
+}
+
 #sliders {
 	text-align: right;
-	margin-right: 10%;
+	margin-right: 5%;
 }
 

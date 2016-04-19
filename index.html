@@ -16,7 +16,15 @@
   	<svg id="svg"></svg>
 
     <div id="sliders">
-      <p class="label"><strong>Ball Size</strong></p>
+      <label>
+        <strong>Add/reduce number of balls</strong>
+        <button id="plus">+</button>
+        <button id="minus">-</button>
+      </label>
+      <label for="size-slider" class="label"><strong>Velocity</strong></label>
+      <input type="range" id="velocity-slider" value="20">
+
+      <label for="size-slider" class="label"><strong>Size</strong></label>
       <input type="range" id="size-slider">
     </div>
 
