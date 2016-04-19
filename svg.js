@@ -2,6 +2,10 @@ var Ball = require("./ball");
 
 var SVG = function () {
 	this.svg = document.getElementById("svg");
+	this.sizeSlider = document.getElementById("size-slider");
+	this.velSlider = document.getElementById("velocity-slider");
+	this.plusButton = document.getElementById("plus");
+
 	this.ballColors = ["red", "deeppink", "forestgreen", "mediumvioletred", "slateblue",
 											"darkorange", "gold", "black", "sienna", "mediumseagreen"];
 	this.setDimensions();
@@ -14,17 +18,20 @@ var SVG = function () {
 SVG.prototype.configureEventListeners = function () {
 	window.addEventListener("resize", this.onResize.bind(this));
 
-	var sizeSlider = document.getElementById("size-slider");
-	sizeSlider.addEventListener("input", this.changeBallSize.bind(this));
+	this.sizeSlider.addEventListener("input", this.changeBallSize.bind(this));
+	this.velSlider.addEventListener("input", this.changeVelocity.bind(this));
 
-	var velSlider = document.getElementById("velocity-slider");
-	velSlider.addEventListener("input", this.changeVelocity.bind(this));
+	this.plusButton.addEventListener("click", this.addBall.bind(this));
+
 };
 
 SVG.prototype.addBall = function () {
-	var ballRadius = 60;
+	var ballRadius = this.sizeSlider.value;
+	var ballVelocity = this.velSlider.value;
 	var ballColor = this.ballColors[Math.floor(Math.random() * this.ballColors.length)]
-	this.balls.push(new Ball(this.svg, this.width/2, ballRadius, this.width, this.height, ballColor));
+	var newBall = new Ball(this.svg, this.width/2, ballRadius, this.width, this.height, ballColor, ballVelocity);
+	debugger;
+	this.balls.push(newBall);
 };
 
 SVG.prototype.setDimensions = function () {
@@ -48,14 +55,14 @@ SVG.prototype.onResize = function (e) {
 SVG.prototype.changeVelocity = function (e) {
 	e.preventDefault();
 	this.balls.forEach(function (ball) {
-		ball.changeVel(e.target.value);
+		ball.setVel(e.target.value);
 	});
 };
 
 SVG.prototype.changeBallSize = function (e) {
 	e.preventDefault();
 	this.balls.forEach(function (ball) {
-		ball.resize(e.target.value);
+		ball.setSize(e.target.value);
 	});
 };
 
@@ -67,7 +74,9 @@ SVG.prototype.start = function () {
 SVG.prototype.animate = function (timestamp) {
 	var delta = timestamp - this.lastTime;
 	this.balls.forEach(function (ball) {
-		ball.move();
+		if (ball.moving) {
+			ball.move();
+		}
 	});
 	requestAnimationFrame(this.animate.bind(this));
 };

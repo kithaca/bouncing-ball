@@ -1,17 +1,18 @@
-var Ball = function (svg, x, radius, xBound, yBound, color) {
+var Ball = function (svg, x, radius, xBound, yBound, color, velocity) {
 	this.svg = svg;
+	this.circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+
 	this.xBound = xBound;
 	this.yBound = yBound;
 	this.clicked = false;
-
+	this.moving = false;
 	this.x = x;
-	this.y = radius + 30;
-	this.radius = radius;
+	this.setSize(radius);
+
 	this.color = color;
 	this.xDir = 0;
 	this.yDir = 0;
-	this.velocity = 3;
-	this.circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+	this.setVel(velocity);
 	this.configureEventListeners();
 	this.draw();
 };
@@ -93,6 +94,9 @@ Ball.prototype.mouseDown = function (e) {
 
 Ball.prototype.mouseUp = function (e) {
 	e.preventDefault();
+	if (!this.moving) {
+		this.moving = true;
+	}
 
 	// use basic geometry to define new direction of ball movement
 	if (this.clicked) {
@@ -107,15 +111,16 @@ Ball.prototype.mouseUp = function (e) {
 	}
 };
 
-Ball.prototype.resize = function (value) {
+Ball.prototype.setSize = function (value) {
 	this.radius = (value * 0.8) + 20;
+	this.y = this.radius + 30;
 	this.adjustBounds();
 	this.circle.setAttribute("r", this.radius);
 	this.circle.setAttribute("cx", this.x);
 	this.circle.setAttribute("cy", this.y);
 };
 
-Ball.prototype.changeVel = function (value) {
+Ball.prototype.setVel = function (value) {
 	this.velocity = value * 0.15;
 };
 
