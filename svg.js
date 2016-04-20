@@ -6,33 +6,30 @@ var SVG = function () {
 	this.velSlider = document.getElementById("velocity-slider");
 	this.plusButton = document.getElementById("plus");
 	this.minusButton = document.getElementById("minus");
-
+	this.balls = [];
 	this.ballColors = ["red", "deeppink", "forestgreen", "mediumvioletred", "slateblue",
 											"darkorange", "gold", "black", "sienna", "mediumseagreen"];
 	this.setDimensions();
 	this.configureEventListeners();
-	this.balls = [];
 	this.addBall();
 	this.start();
 };
 
 SVG.prototype.configureEventListeners = function () {
 	window.addEventListener("resize", this.onResize.bind(this));
-
 	this.sizeSlider.addEventListener("input", this.changeBallSize.bind(this));
 	this.velSlider.addEventListener("input", this.changeVelocity.bind(this));
-
 	this.plusButton.addEventListener("click", this.addBall.bind(this));
 	this.minusButton.addEventListener("click", this.removeBall.bind(this));
 };
 
 SVG.prototype.addBall = function () {
-	// debugger;
 	var ballRadius = this.sizeSlider.value;
 	var ballVelocity = this.velSlider.value;
 	var ballColor = this.ballColors[Math.floor(Math.random() * this.ballColors.length)]
-	var newBall = new Ball(this.svg, this.width/2, ballRadius, this.width, this.height, ballColor, ballVelocity);
-	this.balls.push(newBall);
+
+	this.balls.push(new Ball(this.svg, this.width/2, ballRadius, this.width,
+		this.height, ballColor, ballVelocity));
 };
 
 SVG.prototype.removeBall = function () {

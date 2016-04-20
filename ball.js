@@ -1,17 +1,15 @@
 var Ball = function (svg, x, radius, xBound, yBound, color, velocity) {
 	this.svg = svg;
 	this.circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-
 	this.xBound = xBound;
 	this.yBound = yBound;
+	this.color = color;
+	this.xDir = 0;
+	this.yDir = 0;
 	this.clicked = false;
 	this.moving = false;
 	this.x = x;
 	this.setSize(radius);
-
-	this.color = color;
-	this.xDir = 0;
-	this.yDir = 0;
 	this.setVel(velocity);
 	this.configureEventListeners();
 	this.draw();
@@ -48,21 +46,26 @@ Ball.prototype.createGradient = function () {
 };
 
 Ball.prototype.adjustBounds = function () {
-	if (this.x - this.radius <= 0) {
-		this.x = this.radius + 2;
-		this.xDir = this.xDir < 0 ? this.xDir *= -1 : this.xDir;
-	} else if (this.x + this.radius >= this.xBound) {
-		this.x = this.xBound - this.radius - 2;
-		this.xDir = this.xDir > 0 ? this.xDir *= -1 : this.xDir;
-	}
+	var adjustedX = this.getNewPosAndDir(this.x, this.xDir, this.radius, this.xBound);
+	this.x = adjustedX[0];
+	this.xDir = adjustedX[1];
 
-	if (this.y - this.radius <= 0) {
-		this.y = this.radius + 2;
-		this.yDir = this.yDir < 0 ? this.yDir *= -1 : this.yDir;
-	} else if (this.y + this.radius >= this.yBound) {
-		this.y = this.yBound - this.radius - 2;
-		this.yDir = this.yDir > 0 ? this.yDir *= -1 : this.yDir;
+	var adjustedY = this.getNewPosAndDir(this.y, this.yDir, this.radius, this.yBound);
+	this.y = adjustedY[0];
+	this.yDir = adjustedY[1];
+};
+
+Ball.prototype.getNewPosAndDir = function (pos, dir, radius, bound) {
+	var newPos = pos;
+	var newDir = dir;
+	if (pos - radius <= 0) {
+		newPos = radius + 2;
+		newDir = dir < 0 ? dir * -1 : dir;
+	} else if (pos + radius >= bound) {
+		newPos = bound - radius - 2;
+		newDir = dir > 0 ? dir * -1 : dir;
 	}
+	return [newPos, newDir];
 };
 
 Ball.prototype.move = function () {
@@ -72,7 +75,6 @@ Ball.prototype.move = function () {
 
 	this.circle.setAttribute("cx", this.x);
 	this.circle.setAttribute("cy", this.y);
-	// this.circle.setAttribute("transform", "rotate(10)");
 };
 
 Ball.prototype.resetBounds = function (xBound, yBound) {
@@ -97,7 +99,6 @@ Ball.prototype.mouseUp = function (e) {
 	if (!this.moving) {
 		this.moving = true;
 	}
-
 	// use basic geometry to define new direction of ball movement
 	if (this.clicked) {
 		var xDiff = e.screenX - this.x;
@@ -113,7 +114,9 @@ Ball.prototype.mouseUp = function (e) {
 
 Ball.prototype.setSize = function (value) {
 	this.radius = (value * 0.8) + 20;
-	this.y = this.radius + 30;
+	if (!this.y || this.y < this.radius + 30) {
+		this.y = this.radius + 30;
+	}
 	this.adjustBounds();
 	this.circle.setAttribute("r", this.radius);
 	this.circle.setAttribute("cx", this.x);
