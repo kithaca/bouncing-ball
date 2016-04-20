@@ -27,6 +27,7 @@ SVG.prototype.configureEventListeners = function () {
 };
 
 SVG.prototype.addBall = function () {
+	// debugger;
 	var ballRadius = this.sizeSlider.value;
 	var ballVelocity = this.velSlider.value;
 	var ballColor = this.ballColors[Math.floor(Math.random() * this.ballColors.length)]

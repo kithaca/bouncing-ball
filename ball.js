@@ -22,7 +22,7 @@ Ball.prototype.draw = function () {
 	this.circle.setAttribute("cx", this.x);
 	this.circle.setAttribute("cy", this.y);
 	this.circle.setAttribute("r", this.radius);
-	this.circle.setAttribute("fill", "url(#grad)");
+	this.circle.setAttribute("fill", "url(#" + this.color + ")");
 	this.circle.style.cursor = "pointer";
 
 	this.svg.appendChild(this.circle);
@@ -33,7 +33,7 @@ Ball.prototype.createGradient = function () {
 	var stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
 	var stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
 
-	gradient.setAttribute("id", "grad");
+	gradient.setAttribute("id", this.color);
 	gradient.setAttribute("fx", "30%");
 	gradient.setAttribute("fy", "30%");
 
