@@ -89,8 +89,9 @@ Ball.prototype.configureEventListeners = function () {
 
 Ball.prototype.mouseDown = function (e) {
 	e.preventDefault();
-
 	this.clicked = true;
+	this.oldX = this.x;
+	this.oldY = this.y;
 	this.svg.style.cursor = "pointer";
 };
 
@@ -101,8 +102,8 @@ Ball.prototype.mouseUp = function (e) {
 	}
 	// use basic geometry to define new direction of ball movement
 	if (this.clicked) {
-		var xDiff = e.screenX - this.x;
-		var yDiff = e.screenY - this.y;
+		var xDiff = e.screenX - this.oldX;
+		var yDiff = e.screenY - this.oldY;
 
 		var hyp = Math.sqrt((xDiff * xDiff) + (yDiff * yDiff));
 		this.xDir = xDiff / hyp;
