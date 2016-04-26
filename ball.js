@@ -1,4 +1,4 @@
-var Ball = function (svg, x, radius, xBound, yBound, color, velocity) {
+var Ball = function (svg, x, radius, xBound, yBound, color, velocity, y) {
 	this.svg = svg;
 	this.circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 	this.xBound = xBound;
@@ -9,6 +9,7 @@ var Ball = function (svg, x, radius, xBound, yBound, color, velocity) {
 	this.clicked = false;
 	this.moving = false;
 	this.x = x;
+	this.y = y;
 	this.setSize(radius);
 	this.setVel(velocity);
 	this.configureEventListeners();
@@ -97,14 +98,13 @@ Ball.prototype.mouseDown = function (e) {
 
 Ball.prototype.mouseUp = function (e) {
 	e.preventDefault();
-	if (!this.moving) {
-		this.moving = true;
-	}
 	// use basic geometry to define new direction of ball movement
 	if (this.clicked) {
-		var xDiff = e.screenX - this.oldX;
-		var yDiff = e.screenY - this.oldY;
-
+		if (!this.moving) {
+			this.moving = true;
+		}
+		var xDiff = e.clientX - this.oldX;
+		var yDiff = e.clientY - this.oldY - (document.getElementById("header").offsetHeight + 30);
 		var hyp = Math.sqrt((xDiff * xDiff) + (yDiff * yDiff));
 		this.xDir = xDiff / hyp;
 		this.yDir = yDiff / hyp;
@@ -115,7 +115,7 @@ Ball.prototype.mouseUp = function (e) {
 
 Ball.prototype.setSize = function (value) {
 	this.radius = (value * 0.8) + 20;
-	if (!this.y || this.y < this.radius + 30) {
+	if (this.y < this.radius + 30) {
 		this.y = this.radius + 30;
 	}
 	this.adjustBounds();

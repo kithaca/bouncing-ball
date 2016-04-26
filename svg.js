@@ -29,7 +29,7 @@ SVG.prototype.addBall = function () {
 	var ballColor = this.ballColors[Math.floor(Math.random() * this.ballColors.length)]
 
 	this.balls.push(new Ball(this.svg, this.width/2, ballRadius, this.width,
-		this.height, ballColor, ballVelocity));
+		this.height, ballColor, ballVelocity, this.height/2));
 };
 
 SVG.prototype.removeBall = function () {
@@ -44,6 +44,9 @@ SVG.prototype.setDimensions = function () {
 	this.height = 0.95 *
 		(window.innerHeight - document.getElementById("header").offsetHeight
 											  - document.getElementById("sliders").offsetHeight - 70);
+	if (this.height < 0) {
+		this.height = 0;
+	}
 	this.svg.setAttribute("width", this.width);
 	this.svg.setAttribute("height", this.height);
 };
